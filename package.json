@@ -1,8 +1,7 @@
-
 {
   "name": "imagekit-server",
   "version": "1.0.0",
   "dependencies": {
-    "imagekit": "^4.1.4"
+    "@imagekit/nodejs": "^1.0.0"
   }
 }
