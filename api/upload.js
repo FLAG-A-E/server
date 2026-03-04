@@ -1,5 +1,7 @@
-const ImageKit = require('imagekit');
+// ✅ الاستيراد الجديد
+const { ImageKit } = require('@imagekit/nodejs');
 
+// ✅ الإنشاء الجديد (بدون new)
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -7,17 +9,21 @@ const imagekit = new ImageKit({
 });
 
 module.exports = async (req, res) => {
-  // السماح لموقعك بالوصول
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   
-  // جلب التوقيع
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // ✅ جلب التوقيع (نفس الطريقة)
   if (req.method === 'GET') {
     const auth = imagekit.getAuthenticationParameters();
     return res.json(auth);
   }
   
-  // رفع الصورة
+  // ✅ رفع الصورة (نفس الطريقة)
   if (req.method === 'POST') {
     try {
       const { file, fileName } = req.body;
@@ -29,11 +35,16 @@ module.exports = async (req, res) => {
       
       return res.json({
         success: true,
-        url: result.url
+        url: result.url,
+        fileId: result.fileId
       });
       
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ 
+        error: error.message 
+      });
     }
   }
+  
+  res.status(405).json({ error: 'Method not allowed' });
 };
