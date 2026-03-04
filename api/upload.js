@@ -1,7 +1,5 @@
-// ✅ الاستيراد الجديد
-const { ImageKit } = require('@imagekit/nodejs');
+const ImageKit = require('imagekit');
 
-// ✅ الإنشاء الجديد (بدون new)
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -9,7 +7,6 @@ const imagekit = new ImageKit({
 });
 
 module.exports = async (req, res) => {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   
@@ -17,13 +14,11 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
   
-  // ✅ جلب التوقيع (نفس الطريقة)
   if (req.method === 'GET') {
     const auth = imagekit.getAuthenticationParameters();
     return res.json(auth);
   }
   
-  // ✅ رفع الصورة (نفس الطريقة)
   if (req.method === 'POST') {
     try {
       const { file, fileName } = req.body;
@@ -35,14 +30,11 @@ module.exports = async (req, res) => {
       
       return res.json({
         success: true,
-        url: result.url,
-        fileId: result.fileId
+        url: result.url
       });
       
     } catch (error) {
-      return res.status(500).json({ 
-        error: error.message 
-      });
+      return res.status(500).json({ error: error.message });
     }
   }
   
