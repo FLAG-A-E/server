@@ -1,0 +1,7 @@
+{
+  "name": "imagekit-server",
+  "version": "1.0.0",
+  "dependencies": {
+    "imagekit": "^4.0.0"
+  }
+}
