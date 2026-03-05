@@ -1,12 +1,18 @@
+// /api/auth.js
 import ImageKit from "imagekit";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "GET") return res.status(405).json({ error: "Only GET allowed" });
+
+  if (req.method !== "POST") return res.status(405).json({ error: "Only POST allowed" });
+
+  const { fileName } = req.body;
+  if (!fileName) return res.status(400).json({ error: "fileName is required" });
 
   const imagekit = new ImageKit({
     publicKey: process.env.IMAGEKIT_PUBLIC,
@@ -14,8 +20,7 @@ export default function handler(req, res) {
     urlEndpoint: process.env.IMAGEKIT_URL
   });
 
-  // الحصول على توقيع صالح للرفع
-  const authenticationParameters = imagekit.getAuthenticationParameters();
+  const auth = imagekit.getAuthenticationParameters({ fileName });
 
-  res.status(200).json(authenticationParameters);
+  res.status(200).json(auth);
 }
