@@ -1,6 +1,10 @@
 import ImageKit from "imagekit";
 
-
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC,
+  privateKey: process.env.IMAGEKIT_PRIVATE,
+  urlEndpoint: process.env.IMAGEKIT_URL
+});
 
 export default function handler(req, res) {
 
@@ -8,7 +12,7 @@ export default function handler(req, res) {
     return res.status(405).json({ error: "Only GET allowed" });
   }
 
-  const result = imagekit.getAuthenticationParameters();
+  const auth = imagekit.getAuthenticationParameters();
 
-  res.status(200).json(result);
+  res.status(200).json(auth);
 }
