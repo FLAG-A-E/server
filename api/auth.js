@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       file: fileBase64,
       fileName,
       useUniqueFileName: true,
-      folder: "/uploads"
+      folder: "/auth"
     });
 
     res.status(200).json(uploadResult);
